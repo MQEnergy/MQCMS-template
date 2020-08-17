@@ -110,6 +110,8 @@ http://127.0.0.1:9507
 http://127.0.0.1:9507/backend/token/create 
 
 访问以下地址可解析token
+http://127.0.0.1:9507/backend/token/index 
+
 ```
 ## 三、扩展功能
 ### 1、生成model
