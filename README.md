@@ -1,24 +1,9 @@
 本项目基于hyperf2.0开发的快速应用开发框架，感谢hyperf的作者提供了这么优秀的框架
 
-### 项目结构
-```
-Laidanme                           
-├─ service                       // 服务层 提供接口等服务
-└─ backend                       // 后台前端
-```
+单独前端项目仓库：
+[https://github.com/MQEnergy/MQCMS-admin](https://github.com/MQEnergy/MQCMS-admin)
 
-## 一、运行后台前端
-### 1、安装依赖
-```
-cd backend
-yarn install / npm install #安装依赖包
-```
-### 2、运行项目
-```
-yarn run serve / npm run serve  #运行项目
-```
-
-## 二、运行服务端
+## 一、运行服务端
 ### 1、docke环境开发（非必须）
 window10以下环境安装`docker toolbox`。
 
@@ -115,7 +100,7 @@ http://127.0.0.1:9507/backend/token/create
 http://127.0.0.1:9507/backend/token/index 
 
 ```
-## 三、扩展功能
+## 二、扩展功能
 ### 1、生成model
 ```
 php bin/hyperf.php gen:model --path=app/Model/Common --with-comments category
@@ -151,7 +136,7 @@ php bin/hyperf.php mq:controller FooController FooService backend
 # FooController：controller名称 FooService：service名称 backend：service对应模块名称（后台，接口 可扩展，eg.可写成：Api API api ...）
 php bin/hyperf.php mq:controller -N App\\Controller\\Api\\V1 FooController FooService backend
 ```
-## 四、常见问题
+## 三、常见问题
 ### 1、自动初始化命令后访问接口出现 Signature verification failed
 答：由于初始化命令生成的是后端接口代码，请使用/backend/token/index 生成一个token 然后请求接口在header中加入Authorization参数 值为 Bearer token值
 ### 2、访问接口出现 Key may not be empty 
