@@ -1,0 +1,81 @@
+<project name="mp-service" default="all" basedir="../">
+    <echo message="platform ${platform}"/>
+    <if>
+        <isset property="env"/>
+        <then>
+            <echo message="env ${env}"/>
+        </then>
+        <else>
+            <fail message="env not set!"/>
+        </else>
+    </if>
+
+    <!--引用外部参数-->
+    <property file="/service/build.properties"/>
+
+    <!--文件名称-->
+    <property name="tarfile" value="${phing.project.name}-${buildnumber}.${buildid}.tar.gz"/>
+
+    <!--输出目录地址-->
+    <property name="distfile" value="${dir.output}/${tarfile}"/>
+
+    <!--清空构建输出目录-->
+    <target name="clean">
+        <delete dir="${dir.output}"/>
+    </target>
+
+    <!--创建构建输出目录-->
+    <target name="prepare" depends="clean">
+        <mkdir dir="${dir.output}"/>
+        <exec command="chmod +x ${dir.output}"></exec>
+    </target>
+
+    <!-- 初始化框架  -->
+    <target name="init" depends="prepare">
+        <echo message="copy to build start"/>
+        <copy todir="${dir.output}">
+            <filelist dir=".." files="composer.json"/>
+            <filelist dir=".." files=".env.example"/>
+        </copy>
+
+        <!--copy app -->
+        <copy todir="${dir.output}/app">
+            <fileset dir="app">
+                <include name="**/**"/>
+            </fileset>
+        </copy>
+
+        <!--copy bin -->
+        <copy todir="${dir.output}/bin">
+            <fileset dir="bin">
+                <include name="**/**"/>
+            </fileset>
+        </copy>
+
+        <!--copy config -->
+        <copy todir="${dir.output}/config">
+            <fileset dir="config">
+                <include name="**/**"/>
+            </fileset>
+        </copy>
+
+        <mkdir dir="${dir.output}/runtime"/>
+
+        <echo message="copy to build end"/>
+    </target>
+
+    <!--需要打包的文件-->
+    <fileset id="codefiles" dir="${dir.output}" defaultexcludes="true">
+        <include name="**/**"/>
+    </fileset>
+
+    <!--创建打包文件-->
+    <target name="build" depends="init">
+        <echo message="Creating distribution tar for ${name} ${version}"/>
+        <tar destfile="${distfile}" compression="gzip">
+            <fileset refid="codefiles"/>
+        </tar>
+    </target>
+
+    <target name="all" depends="build"/>
+</project>
