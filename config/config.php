@@ -22,8 +22,6 @@ return [
     'allow_origins' => [
         'http://127.0.0.1',
         'http://localhost',
-        'http://mp-h5.lyky.xyz',
-        'https://mp-h5.lyky.cn',
     ],
     StdoutLoggerInterface::class => [
         'log_level' => [
