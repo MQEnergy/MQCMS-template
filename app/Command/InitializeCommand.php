@@ -5,6 +5,7 @@ namespace App\Command;
 
 use App\Constants\ErrorCode;
 use App\Exception\BusinessException;
+use App\Model\Common\BackendAdmin;
 use App\Utils\Common;
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Command\Command as HyperfCommand;
@@ -12,7 +13,6 @@ use Hyperf\Contract\ConfigInterface;
 use Hyperf\Database\Commands\ModelOption;
 use Hyperf\Database\ConnectionResolverInterface;
 use Hyperf\Database\Schema\MySqlBuilder;
-use Hyperf\DbConnection\Db;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Utils\Str;
@@ -173,7 +173,7 @@ class InitializeCommand extends HyperfCommand
         $password = $this->ask('密码');
 
         try {
-            $adminInfo = Db::table('admin')->select('id')->where('account', $account)->first();
+            $adminInfo = BackendAdmin::query()->select('id')->where('account', $account)->first();
             if ($adminInfo) {
                 throw new BusinessException(ErrorCode::BAD_REQUEST, '此账号名已存在');
             }
@@ -192,7 +192,7 @@ class InitializeCommand extends HyperfCommand
                 'login_time' => time(),
                 'login_ip' => '127.0.0.1'
             ];
-            $res = Db::table('admin')->insert($data);
+            $res = BackendAdmin::query()->insert($data);
             if (!$res) {
                 throw new BusinessException(ErrorCode::BAD_REQUEST, '新建账号失败，请检查数据库连接');
             }

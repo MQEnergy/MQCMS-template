@@ -6,15 +6,15 @@ use Hyperf\Database\Schema\Schema;
 use Hyperf\Database\Schema\Blueprint;
 use Hyperf\Database\Migrations\Migration;
 
-class CreateAdminTable extends Migration
+class CreateBackendAdminTable extends Migration
 {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        if (!Schema::hasTable('admin')) {
-            Schema::create('admin', function (Blueprint $table) {
+        if (!Schema::hasTable('backend_admin')) {
+            Schema::create('backend_admin', function (Blueprint $table) {
                 $table->bigIncrements('id');
                 $table->string('uuid', 32)->nullable(false)->comment('唯一id号');
                 $table->string('account', 64)->nullable(false)->comment('账号');
@@ -39,6 +39,6 @@ class CreateAdminTable extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('admin');
+        Schema::dropIfExists('backend_admin');
     }
 }
