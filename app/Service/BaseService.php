@@ -112,6 +112,76 @@ class BaseService
     }
 
     /**
+     * @param array $joinTables
+     * @return $this
+     */
+    public function setJoinTables(array $joinTables): self
+    {
+        $this->joinTables = $joinTables;
+        return $this;
+    }
+
+    /**
+     * @param array $condition
+     * @return $this
+     */
+    public function setCondition(array $condition): self
+    {
+        $this->condition = $condition;
+        return $this;
+    }
+
+    /**
+     * @param array $select
+     * @return $this
+     */
+    public function setSelect(array $select): self
+    {
+        $this->select = $select;
+        return $this;
+    }
+
+    /**
+     * @param $orderBy
+     * @return $this
+     */
+    public function setOrderBy($orderBy): self
+    {
+        $this->orderBy = $orderBy;
+        return $this;
+    }
+
+    /**
+     * @param array $groupBy
+     * @return $this
+     */
+    public function setGroupBy(array $groupBy): self
+    {
+        $this->groupBy = $groupBy;
+        return $this;
+    }
+
+    /**
+     * @param array $data
+     * @return $this
+     */
+    public function setData(array $data): self
+    {
+        $this->data = $data;
+        return $this;
+    }
+
+    /**
+     * @param array $with
+     * @return $this
+     */
+    public function setWith(array $with): self
+    {
+        $this->with = $with;
+        return $this;
+    }
+
+    /**
      * 重置属性值
      */
     public function resetAttributes()
