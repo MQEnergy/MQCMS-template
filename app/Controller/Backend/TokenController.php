@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Controller\Backend;
 
-use App\Amqp\Producer\DemoProducer;
 use App\Utils\Common;
 use App\Utils\Redis;
 use Hyperf\HttpServer\Annotation\AutoController;
