@@ -20,8 +20,8 @@ return [
     'scan_cacheable' => env('SCAN_CACHEABLE', false),
     'app_name' => env('APP_NAME', 'mqcms'),
     'allow_origins' => [
-        'http://127.0.0.1',
-        'http://localhost',
+        '127.0.0.1',
+        'localhost',
     ],
     StdoutLoggerInterface::class => [
         'log_level' => [

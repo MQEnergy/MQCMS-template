@@ -36,12 +36,8 @@ class CorsMiddleware implements MiddlewareInterface
         $origin = $request->getHeader('origin');
         $origin = $origin ? $origin[0] : false;
         if ($origin != false) {
-            $isPort = (int) stripos($origin, ':', 5);
-            if ($isPort) {
-                $isOrigin = in_array(substr($origin, 0, $isPort), $originsList);
-            } else {
-                $isOrigin = in_array($origin, $originsList);
-            }
+            $originStr = str_replace(['http://', 'https://'], '', $origin);
+            $isOrigin = in_array($originStr, $originsList);
             if ($isOrigin) {
                 $response = Context::get(ResponseInterface::class);
                 $response = $response->withHeader('Access-Control-Allow-Origin', "{$origin}")
