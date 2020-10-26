@@ -268,6 +268,33 @@ class BaseService
     }
 
     /**
+     * 从缓存中获取列表
+     * @param array $ids
+     * @return array
+     */
+    public function showManyFromCache(array $ids)
+    {
+        try {
+            if (!$this->model || !($this->model instanceof Model)) {
+                throw new BusinessException(ErrorCode::SERVER_ERROR);
+            }
+            $info = $this->model::findManyFromCache($ids);
+            if (!$info) {
+                return [];
+            }
+            $data = $info->toArray();
+            foreach ($data as $key => &$value) {
+                isset($value['created_at']) && $value['created_at'] = date('Y-m-d H:i:s', $value['created_at']);
+                isset($value['updated_at']) && $value['updated_at'] = date('Y-m-d H:i:s', $value['updated_at']);
+            }
+            return $data;
+
+        } catch (\Exception $e) {
+            throw new BusinessException((int)$e->getCode(), $e->getMessage());
+        }
+    }
+
+    /**
      * 删除
      * @param RequestInterface $request
      * @return int
@@ -362,6 +389,19 @@ class BaseService
     }
 
     /**
+     * 获取所有列表的数组
+     * @return array
+     */
+    public function get($isArray = true)
+    {
+        $query = $this->multiTableJoinQueryBuilder()->get();
+        if ($isArray) {
+            return $query->toArray();
+        }
+        return $query;
+    }
+
+    /**
      * 根据结果数组分页
      * @param $data
      * @param $per_page
@@ -376,14 +416,14 @@ class BaseService
     /**
      * 单多表关联查询构造器
      * 注意：此方法因为在构造完成会重置参数(resetAttributes)，如再次使用condition, select, orderBy等参数，请在构造之前用变量存储
-     * @return \Hyperf\Database\Query\Builder
+     * @return \Hyperf\Database\Model\Builder
      */
-    public function multiTableJoinQueryBuilder()
+    public function multiTableJoinQueryBuilder($cache=false)
     {
         if (!$this->model || !($this->model instanceof Model)) {
             throw new BusinessException(ErrorCode::SERVER_ERROR);
         }
-        $query = $this->model::query();
+        $query = $this->model::query($cache);
 
         if (!empty($this->with)) {
             $arrCount = Common::getArrCountRecursive($this->with);
@@ -431,7 +471,7 @@ class BaseService
             }
         }
 
-            if (!empty($this->condition)) {
+        if (!empty($this->condition)) {
             $query = $query->where($this->condition);
         }
 
