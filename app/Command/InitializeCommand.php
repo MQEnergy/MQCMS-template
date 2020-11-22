@@ -83,27 +83,46 @@ class InitializeCommand extends HyperfCommand
                 return false;
             }
         }
-        $choice = $this->choice('是否执行migrate?', ['No', 'Yes']);
-        if ($choice === 'Yes') {
-            $this->initMigration();
-        }
-        $choice = $this->choice('是否初始化所有Model类？', ['No', 'Yes']);
-        if ($choice === 'Yes') {
-            $this->initModel();
+        $choice = $this->choice('请选择一下执行选项?', ['执行所有migrate', '生成所有model类', '基于Model初始化所有Service类', '基于Service初始化所有Controller类', '初始化一个后台账号密码', '执行所有', 'Quit']);
 
-            $choice = $this->choice('是否基于Model初始化所有Service类？', ['No', 'Yes']);
-            if ($choice === 'Yes') {
+        switch ($choice) {
+            case '执行所有migrate':
+                $this->initMigration();
+                break;
+            case '生成所有model类':
+                $this->initModel();
+                break;
+            case '基于Model初始化所有Service类':
                 $this->initService();
-
-                $choice = $this->choice('是否初始化所有Controller类？', ['No', 'Yes']);
-                if ($choice === 'Yes') {
-                    $this->initController();
-                }
-            }
-        }
-        $choice = $this->choice('是否初始化一个后台账号密码？', ['No', 'Yes']);
-        if ($choice === 'Yes') {
-            $this->initAccount();
+                break;
+            case '基于Service初始化所有Controller类':
+                $this->initController();
+                break;
+            case '初始化一个后台账号密码':
+                $this->initAccount();
+                break;
+            case '执行所有':
+                $this->info('migrate start');
+                $this->initMigration();
+                $this->info('migrate end');
+                $this->info('model start');
+                $this->initModel();
+                $this->info('model end');
+                $this->info('service start');
+                $this->initService();
+                $this->info('service end');
+                $this->info('controller start');
+                $this->initController();
+                $this->info('controller end');
+                $this->info('init an account start');
+                $this->initAccount();
+                break;
+            case 'Quit':
+                return false;
+                break;
+            default:
+                return;
+                break;
         }
         $this->info('Initialization successfully.');
     }
@@ -190,7 +209,9 @@ class InitializeCommand extends HyperfCommand
                 'register_time' => time(),
                 'register_ip' => '127.0.0.1',
                 'login_time' => time(),
-                'login_ip' => '127.0.0.1'
+                'login_ip' => '127.0.0.1',
+                'created_at' => time(),
+                'updated_at' => time()
             ];
             $res = BackendAdmin::query()->insert($data);
             if (!$res) {
