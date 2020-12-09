@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace %NAMESPACE%;
 
-use App\Model\Entry\%MODEL%;
+use App\Model\Entity\%MODEL%;
 use Hyperf\Di\Annotation\Inject;
 
 class %CLASS% extends \App\Service\Common\%CLASS%
