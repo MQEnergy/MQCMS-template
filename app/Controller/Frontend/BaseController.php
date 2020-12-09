@@ -12,6 +12,7 @@ use App\Service\BaseService;
 use App\Utils\Common;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\View\RenderInterface;
@@ -30,7 +31,7 @@ class BaseController extends AbstractController
     public $service;
 
     /**
-     * @RequestMapping(path="index.html[/[{option:.+}]]", methods="get")
+     * @GetMapping(path="index.html[/[{option:.+}]]")
      * @param RenderInterface $render
      * @param RequestInterface $request
      * @return array
@@ -43,12 +44,13 @@ class BaseController extends AbstractController
         $page < 1 && $page = 1;
         $limit > 100 && $limit = 100;
         $searchForm = $request->has('search') ? $request->input('search') : [];
-        $data = $this->logic->index($page, $limit, $searchForm);
-        return $render->render(Common::getTemplatePath($this, __FUNCTION__), compact('data', 'router'));
+        $data = $this->service->index($page, $limit, $searchForm);
+        $params = $request->all();
+        return Common::display($render, $this, __FUNCTION__, compact('data', 'params', 'router'));
     }
 
     /**
-     * @RequestMapping(path="detail-{id:\d+}.html[/[{option:.+}]]", methods="get")
+     * @GetMapping(path="detail-{id:\d+}.html[/[{option:.+}]]")
      * @param RequestInterface $request
      * @return \Hyperf\Database\Model\Model|\Hyperf\Database\Query\Builder|object|null
      */
@@ -58,7 +60,7 @@ class BaseController extends AbstractController
             'id' => 'required|integer',
         ]);
         $router = $request->getRequestUri();
-        $data = $this->logic->show($params['id']);
-        return $render->render(Common::getTemplatePath($this, __FUNCTION__), compact('data', 'params', 'router'));
+        $data = $this->service->setCondition(['id' => $params['id']])->show();
+        return Common::display($render, $this, __FUNCTION__, compact('data', 'params', 'router'));
     }
 }

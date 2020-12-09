@@ -27,7 +27,8 @@ class HomeController extends BaseController
     {
         $router = $request->getRequestUri();
         $data = [];
-        return $render->render(Common::getTemplatePath($this, __FUNCTION__), compact('data', 'router'));
+        $params = [];
+        return Common::display($render, $this, __FUNCTION__, compact('data', 'params', 'router'));
     }
 
 }

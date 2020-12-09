@@ -50,7 +50,6 @@
         "phpmd/phpmd": "^2.6",
         "friendsofphp/php-cs-fixer": "^2.14",
         "mockery/mockery": "^1.0",
-        "doctrine/common": "^2.9",
         "phpstan/phpstan": "^0.12",
         "hyperf/testing": "~2.0.0",
         "hyperf/devtool": "~2.0.0",

@@ -15,10 +15,10 @@ class Redis
      */
     public static function getPoolName(): string
     {
-        return (new static())->poolName;
+        return (new self())->poolName;
     }
 
-    public static function getContainer(): RedisFactory
+    public static function getContainer()
     {
         return ApplicationContext::getContainer()->get(RedisFactory::class)->get(self::getPoolName());
     }

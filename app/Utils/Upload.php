@@ -119,9 +119,6 @@ class Upload
         }
         @chmod($objectName . $fileUrl,0777);
 
-        // 上传到oss中
-        OssService::getInstance()->simpleUploadFile(env('OSS_BUCKET_NAME'), $fileUrl, $objectName . $fileUrl);
-
         return [
             'name' => $fileName,
             'fullpath' => env('APP_UPLOAD_HOST_URL', '') . $fileUrl,

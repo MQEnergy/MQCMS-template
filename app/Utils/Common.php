@@ -6,6 +6,7 @@ namespace App\Utils;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Snowflake\IdGeneratorInterface;
 use Hyperf\Utils\ApplicationContext;
+use Hyperf\View\RenderInterface;
 
 class Common
 {
@@ -141,6 +142,19 @@ class Common
     public static function getTemplatePath($class, $method)
     {
         return  env('APP_WEB_TEMP', 'default') . '/' . self::getCurrentControllerName($class) . '/' . self::uncamelize($method, '_');
+    }
+
+    /**
+     * 模板展示
+     * @param $render
+     * @param $obj
+     * @param $func
+     * @param $data
+     * @return mixed
+     */
+    public static function display(RenderInterface $render, $obj, $func, $data=[])
+    {
+        return $render->render(self::getTemplatePath($obj, $func), $data);
     }
 
     /**

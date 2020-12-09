@@ -18,12 +18,12 @@ Router::addRoute(['GET', 'POST', 'HEAD'], '/', 'App\Controller\Frontend\HomeCont
  * backend接口
  */
 Router::addGroup('/backend/', function () {
-    require_once dirname(__DIR__) . '/config/routes/backend.php';
+    require_once BASE_PATH . '/config/routes/backend.php';
 });
 
 /**
  * frontend接口
  */
 Router::addGroup('/frontend/', function () {
-    require_once dirname(__DIR__) . '/config/routes/frontend.php';
+    require_once BASE_PATH . '/config/routes/frontend.php';
 });

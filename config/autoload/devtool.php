@@ -51,6 +51,10 @@ return [
             'namespace' => 'App\\Service\\Common',
             'stub' => BASE_PATH . '/app/Command/stubs/service.stub'
         ],
+        'model' => [
+            'namespace' => 'App\\Model\\Entry',
+            'stub' => BASE_PATH . '/app/Command/stubs/model.stub'
+        ],
         'init' => []
     ]
 ];
