@@ -6,7 +6,6 @@ namespace App\Utils;
 use App\Constants\ErrorCode;
 use App\Exception\BusinessException;
 use Hyperf\HttpServer\Contract\RequestInterface;
-use App\Service\Common\OssService;
 
 class Upload
 {
