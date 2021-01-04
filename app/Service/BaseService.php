@@ -394,11 +394,20 @@ class BaseService
      */
     public function get($isArray = true)
     {
-        $query = $this->multiTableJoinQueryBuilder()->get();
+        $list = $this->multiTableJoinQueryBuilder()->get();
         if ($isArray) {
-            return $query->toArray();
+            $list = $list->toArray();
+            foreach ($list as $key => &$value) {
+                isset($value['created_at']) && $value['created_at'] = date('Y-m-d H:i:s', (int) $value['created_at']);
+                isset($value['updated_at']) && $value['updated_at'] = date('Y-m-d H:i:s', (int) $value['updated_at']);
+            }
+        } else {
+            foreach ($list as $key => &$value) {
+                isset($value->created_at) && $value->created_at = date('Y-m-d H:i:s', (int) $value->created_at);
+                isset($value->updated_at) && $value->updated_at = date('Y-m-d H:i:s', (int) $value->updated_at);
+            }
         }
-        return $query;
+        return $list;
     }
 
     /**
