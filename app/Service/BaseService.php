@@ -446,6 +446,29 @@ class BaseService
                     }]);
                 }
             });
+            if (is_array($this->select) && !empty($this->select)) {
+                $arrCount = Common::getArrCountRecursive($this->select);
+                $select = [];
+                if ($arrCount === 1) {
+                    array_walk($this->select, function ($item) use (&$select) {
+                        $select[] = $this->model->getTable() . '.' . $item;
+                    });
+                } else {
+                    foreach ($this->select as $key => $value) {
+                        if (is_array($value)) {
+                            array_walk($value, function ($item) use ($key, &$select) {
+                                $select[] = $key . '.' . $item;
+                            });
+                        } else {
+                            $select[] = $key . '.' . $value;
+                        }
+                    }
+                    $select = !empty($select) ? $select : $this->select;
+                }
+                $query = $query->select($select);
+            } else {
+                $query = $query->select($this->select);
+            }
         } else {
             if (is_array($this->joinTables) && !empty($this->joinTables)) {
                 array_walk($this->joinTables, function (&$item, $key) use (&$query) {
