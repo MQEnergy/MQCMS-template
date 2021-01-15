@@ -243,6 +243,21 @@ class BaseService
     }
 
     /**
+     * @param $column
+     * @param null $key
+     * @return \Hyperf\Utils\Collection
+     */
+    public function pluck($column, $key=null)
+    {
+        try {
+            return $this->multiTableJoinQueryBuilder()->pluck($column, $key);
+
+        } catch (\Exception $e) {
+            throw new BusinessException((int)$e->getCode(), $e->getMessage());
+        }
+    }
+
+    /**
      * 从缓存中获取详情
      * @param $id
      * @return array
