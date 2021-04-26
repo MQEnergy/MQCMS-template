@@ -9,6 +9,7 @@ use App\Exception\BusinessException;
 use App\Utils\Common;
 use App\Utils\JWT;
 use App\Utils\Redis;
+use Hyperf\HttpMessage\Exception\UnauthorizedHttpException;
 use Hyperf\Utils\Context;
 use Psr\Container\ContainerInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface as HttpResponse;
@@ -170,17 +171,18 @@ class BaseAuthMiddleware implements MiddlewareInterface
 
     /**
      * 验证token有效性并获取token值
-     * @param RequestInterface $request
-     * @return array|bool|object|string
+     * @return array|bool|object|string|null
      */
     public function getAuthTokenInfo()
     {
         $config = self::getJwtConfig($this->request);
-        self::$tokenInfo = JWT::getTokenInfo(self::$authToken, $config);
-        if (self::$tokenInfo['exp'] - time() > $config['exp']) {
-            throw new BusinessException(ErrorCode::UNAUTHORIZED, 'Expired token');
+        try {
+            self::$tokenInfo = JWT::getTokenInfo(self::$authToken, $config);
+            return self::$tokenInfo;
+
+        } catch (\Exception $e) {
+            return null;
         }
-        return self::$tokenInfo;
     }
 
     /**
