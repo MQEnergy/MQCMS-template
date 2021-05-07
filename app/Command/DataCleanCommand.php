@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Service\Common\MtSource202104Service;
+use App\Service\BaseService;
 use App\Service\Common\SpiderSourceService;
 use App\Utils\Common;
 use Hyperf\Command\Command as HyperfCommand;
@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputArgument;
 /**
  * @Command
  */
-class DateCleanCommand extends HyperfCommand
+class DataCleanCommand extends HyperfCommand
 {
     /**
      * @var ContainerInterface
@@ -29,16 +29,9 @@ class DateCleanCommand extends HyperfCommand
      */
     public $sourceService;
 
-    /**
-     * @Inject()
-     * @var MtSource202104Service
-     */
-    public $mtSource202104;
-
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-
         parent::__construct('data:clean');
     }
 
@@ -50,7 +43,15 @@ class DateCleanCommand extends HyperfCommand
 
     public function handle()
     {
-        $type = $this->input->getArgument('type');
+        $type = $this->getNameInput()['type'];
+        $date = $this->getNameInput()['date'];
+        $service = 'App\Service\Common\MtSource' . $date . 'Service';
+        $reflectionClass = new \ReflectionClass($service);
+        $mtSource = $reflectionClass->newInstance();
+        if (!($mtSource instanceof BaseService)) {
+            $this->error('此月数据不存在');
+            return false;
+        }
         $sourceList = $this->sourceService->setCondition(['type' => $type])->get();
         $_source = [];
         foreach ($sourceList as $key => $value) {
@@ -59,7 +60,7 @@ class DateCleanCommand extends HyperfCommand
                 $_source[] = [
                     'uuid' => Common::generateSnowId(),
                     'source_uuid' => $value['uuid'],
-                    'keyword' => '国胜大药房（滨湖新区三店）',
+                    'keyword' => $value['keyword'],
                     'goods_name' => $val['name'],
                     'goods_price' => $val['price'],
                     'sale_num' => $val['sale_num'],
@@ -67,9 +68,8 @@ class DateCleanCommand extends HyperfCommand
                 ];
             }
         }
-        // $_source = array_unique($_source, SORT_REGULAR);
-        // print_r($_source);
-        $this->mtSource202104->multiTableJoinQueryBuilder()->insert($_source);
+        $_source = array_unique($_source, SORT_REGULAR);
+        $this->mtSource->multiTableJoinQueryBuilder()->insert($_source);
     }
 
     /**
@@ -81,6 +81,7 @@ class DateCleanCommand extends HyperfCommand
     {
         return [
             'type' => trim($this->input->getArgument('type')),
+            'date' => $this->input->getArgument('date') ? trim($this->input->getArgument('date')) : date('Ym'),
         ];
     }
 
@@ -92,7 +93,8 @@ class DateCleanCommand extends HyperfCommand
     protected function getArguments()
     {
         return [
-            ['type', InputArgument::REQUIRED, ' mt ele jd jdjk'],
+            ['type', InputArgument::REQUIRED, 'mt ele jd jdjk'],
+            ['date', InputArgument::OPTIONAL, '年月 如：202104'],
         ];
     }
 }

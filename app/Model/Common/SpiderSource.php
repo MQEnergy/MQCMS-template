@@ -6,6 +6,7 @@ namespace App\Model\Common;
 /**
  * @property int $id 
  * @property string $uuid uuid
+ * @property string $keyword 关键词
  * @property string $fingerprint 设备唯一识别码
  * @property string $type 类型 mt,ele,jd,jdjk,jddj
  * @property string $imei 设备imei
@@ -28,7 +29,7 @@ class SpiderSource extends Model
      *
      * @var array
      */
-    protected $fillable = ['id', 'uuid', 'fingerprint', 'type', 'imei', 'data', 'year', 'month', 'day', 'created_at'];
+    protected $fillable = ['id', 'uuid', 'keyword', 'fingerprint', 'type', 'imei', 'data', 'year', 'month', 'day', 'created_at'];
     /**
      * The attributes that should be cast to native types.
      *
