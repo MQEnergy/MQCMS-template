@@ -1,4 +1,4 @@
-<project name="mp-service" default="all" basedir="../">
+<project name="mp-service" default="all" basedir="./">
     <echo message="platform ${platform}"/>
     <if>
         <isset property="env"/>
@@ -11,7 +11,7 @@
     </if>
 
     <!--引用外部参数-->
-    <property file="/service/build.properties"/>
+    <property file="${project.basedir}/build.properties"/>
 
     <!--文件名称-->
     <property name="tarfile" value="${phing.project.name}-${buildnumber}.${buildid}.tar.gz"/>
