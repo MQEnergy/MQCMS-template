@@ -52,6 +52,27 @@
             </fileset>
         </copy>
 
+        <!--copy storage -->
+        <copy todir="${dir.output}/storage">
+            <fileset dir="storage">
+                <include name="**/**"/>
+            </fileset>
+        </copy>
+
+        <!--copy public -->
+        <copy todir="${dir.output}/public">
+            <fileset dir="public">
+                <include name="**/**"/>
+            </fileset>
+        </copy>
+
+        <!--copy bin -->
+        <copy todir="${dir.output}/bin">
+            <fileset dir="bin">
+                <include name="**/**"/>
+            </fileset>
+        </copy>
+
         <!--copy config -->
         <copy todir="${dir.output}/config">
             <fileset dir="config">
