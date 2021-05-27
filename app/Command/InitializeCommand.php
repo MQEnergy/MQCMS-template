@@ -83,7 +83,7 @@ class InitializeCommand extends HyperfCommand
                 return false;
             }
         }
-        $choice = $this->choice('请选择一下执行选项?', ['执行所有migrate', '生成所有model类', '基于Model初始化所有Service类', '基于Service初始化所有Controller类', '初始化一个后台账号密码', '执行所有', 'Quit']);
+        $choice = $this->choice('请选择一下执行选项?', ['执行所有migrate', '生成所有model类', '生成所有entity类', '基于Model初始化所有Service类', '基于Service初始化所有Controller类', '初始化一个后台账号密码', '执行所有', 'Quit']);
 
         switch ($choice) {
             case '执行所有migrate':
@@ -91,6 +91,9 @@ class InitializeCommand extends HyperfCommand
                 break;
             case '生成所有model类':
                 $this->initModel();
+                break;
+            case '生成所有entity类':
+                $this->initEntity();
                 break;
             case '基于Model初始化所有Service类':
                 $this->initService();
@@ -146,6 +149,14 @@ class InitializeCommand extends HyperfCommand
             '--with-comments' => true,
             '--prefix' => env('DB_PREFIX')
         ]);
+    }
+
+    /**
+     * init model
+     */
+    public function initEntity()
+    {
+        return $this->call('mq:model');
     }
 
     /**
