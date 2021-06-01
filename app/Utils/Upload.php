@@ -5,7 +5,9 @@ namespace App\Utils;
 
 use App\Constants\ErrorCode;
 use App\Exception\BusinessException;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
+use League\Flysystem\Filesystem;
 
 class Upload
 {
@@ -58,6 +60,12 @@ class Upload
      * @var string
      */
     public $limitSize = '';
+
+    /**
+     * @Inject()
+     * @var Filesystem
+     */
+    public $fileSystem;
 
     /**
      * Upload constructor.
@@ -117,6 +125,19 @@ class Upload
             throw new BusinessException(ErrorCode::UNAUTHORIZED, '文件上传失败');
         }
         @chmod($objectName . $fileUrl,0777);
+
+        // 上传到oss中
+        $stream = fopen($objectName . $fileUrl, 'r+');
+        if (!is_resource($stream)) {
+            throw new UnauthorizedException('文件上传失败');
+        }
+        $res = $this->fileSystem->writeStream($fileUrl, $stream);
+        if (!$res) {
+            throw new UnauthorizedException('文件上传失败');
+        }
+        if (is_resource($stream)) {
+            fclose($stream);
+        }
 
         return [
             'name' => $fileName,
