@@ -87,9 +87,11 @@ class Upload
 
     /**
      * @param RequestInterface $request
-     * @return array|bool
+     * @param string $dirName
+     * @return array
+     * @throws \League\Flysystem\FileExistsException
      */
-    public function uploadFile(RequestInterface $request)
+    public function uploadFile(RequestInterface $request, $dirName='')
     {
         if (!$request->hasFile($this->name)) {
             throw new BusinessException(ErrorCode::BAD_REQUEST, '上传文件名称不存在');
@@ -109,9 +111,14 @@ class Upload
         if (!in_array($this->extension, $this->limitType)) {
             throw new BusinessException(ErrorCode::UNAUTHORIZED, '文件上传格式不支持，支持格式：' . implode(', ', $this->limitType));
         }
-        $objectName = env('RESOURCE_TEMP_PATH');
+        $objectName = env('RESOURCE_TEMP_PATH') ?: BASE_PATH . DIRECTORY_SEPARATOR;
 
-        $filePath = $this->uploadPath . DIRECTORY_SEPARATOR . 'mp'. DIRECTORY_SEPARATOR . date('Y-m-d') . DIRECTORY_SEPARATOR;
+        $filePath = $this->uploadPath . DIRECTORY_SEPARATOR;
+        if ($dirName) {
+            $filePath = $filePath . $dirName. DIRECTORY_SEPARATOR;
+        }
+        $filePath = $filePath . date('Y-m-d') . DIRECTORY_SEPARATOR;
+
         $res = Common::mkDir($objectName . $filePath);
         if (!$res) {
             throw new BusinessException(ErrorCode::UNAUTHORIZED, '资源文件夹创建失败，请检查目录权限');
